@@ -1,0 +1,9 @@
+node_modules/
+test-downloads/
+.env
+.env.*
+*.log
+*.zip
+!Figma_Prototype_Generator.zip
+.DS_Store
+Thumbs.db

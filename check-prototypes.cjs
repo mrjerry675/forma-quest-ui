@@ -1,0 +1,45 @@
+const {chromium}=require('playwright');
+const fs=require('fs'),path=require('path'),assert=require('assert');
+const root=__dirname,shots=path.join(root,'previews'),downloads=path.join(root,'test-downloads');
+fs.mkdirSync(shots,{recursive:true});fs.mkdirSync(downloads,{recursive:true});
+(async()=>{
+ const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+ const context=await browser.newContext({viewport:{width:1440,height:1100},acceptDownloads:true});
+ const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const url=f=>'file:///'+path.join(root,f).replaceAll('\\','/');
+ await page.goto(url('resume.html'));await page.evaluate(()=>localStorage.clear());await page.reload();
+ await page.screenshot({path:path.join(shots,'forma-profile.png'),fullPage:true});
+ await page.locator('[data-field="name"]').fill('Sam Taylor');assert((await page.locator('#resume-paper').innerText()).includes('Sam Taylor'));
+ await page.locator('[data-field="email"]').fill('bad-email');await page.getByRole('button',{name:'Choose my template',exact:true}).click();assert((await page.locator('#profile-error').innerText()).includes('valid email'));
+ await page.locator('[data-field="email"]').fill('sam@example.com');await page.getByRole('button',{name:'Choose my template',exact:true}).click();
+ await page.locator('[data-template="classic"]').click();assert((await page.locator('#resume-paper').getAttribute('class')).includes('classic'));
+ await page.getByRole('button',{name:'Slate blue accent',exact:true}).click();assert((await page.locator('#resume-paper').getAttribute('style')).includes('#48658c'));
+ await page.screenshot({path:path.join(shots,'forma-templates.png'),fullPage:true});
+ await page.getByRole('button',{name:'Refine with AI',exact:true}).click();await page.getByRole('button',{name:'Generate suggestions',exact:true}).click();
+ await page.locator('[data-apply="summary"]').waitFor();const before=await page.locator('#resume-paper').innerText();await page.locator('[data-apply="summary"]').click();assert((await page.locator('#resume-paper').innerText())!==before);
+ await page.getByRole('button',{name:'Undo last change',exact:true}).click();assert((await page.locator('#resume-paper').innerText())===before);
+ await page.locator('[data-apply="summary"]').click();await page.screenshot({path:path.join(shots,'forma-suggestions.png'),fullPage:true});
+ await page.locator('.form-foot [data-step="3"]').click();
+ for(const ext of ['pdf','docx']){const downloadPromise=page.waitForEvent('download');await page.locator('#export-'+ext).click();const download=await downloadPromise;await download.saveAs(path.join(downloads,'resume.'+ext));await page.getByRole('button',{name:'Back to exports',exact:true}).click();assert(fs.statSync(path.join(downloads,'resume.'+ext)).size>1000);}
+ await page.screenshot({path:path.join(shots,'forma-export.png'),fullPage:true});
+ await page.reload();assert((await page.locator('#resume-paper').innerText()).includes('Sam Taylor'));
+ await page.goto(url('learn.html'));await page.evaluate(()=>localStorage.removeItem('quest-prototype-v1'));await page.reload();
+ await page.screenshot({path:path.join(shots,'quest-overview.png'),fullPage:true});
+ await page.getByRole('button',{name:'Take challenge',exact:false}).click();await page.locator('input[value="copy"]').check();await page.getByRole('button',{name:'Check my answer',exact:true}).click();assert((await page.locator('#quiz-feedback').innerText()).includes('Not quite'));
+ await page.locator('input[value="component"]').check();await page.getByRole('button',{name:'Check my answer',exact:true}).click();assert(await page.locator('#modal').evaluate(el=>!el.open));
+ let state=await page.evaluate(()=>JSON.parse(localStorage.getItem('quest-prototype-v1')));assert(state.xp===1330);
+ await page.getByRole('button',{name:'Review answer',exact:false}).click();assert(await page.getByRole('button',{name:'Completed today',exact:true}).isDisabled());await page.getByRole('button',{name:'Close dialog',exact:true}).click();
+ await page.getByRole('button',{name:'Continue learning',exact:true}).click();await page.screenshot({path:path.join(shots,'quest-lesson.png'),fullPage:true});
+ await page.getByRole('button',{name:'Mark lesson complete',exact:true}).click();await page.screenshot({path:path.join(shots,'quest-reward.png')});
+ state=await page.evaluate(()=>JSON.parse(localStorage.getItem('quest-prototype-v1')));assert(state.xp===1430&&state.progress.ui===7);
+ await page.getByRole('button',{name:'Back to overview',exact:false}).click();await page.locator('button[data-view="leaderboard"]').first().click();assert((await page.locator('.leader-table tr.me').innerText()).includes('1,430'));await page.screenshot({path:path.join(shots,'quest-leaderboard.png'),fullPage:true});
+ await page.locator('[data-scope="month"]').click();assert((await page.locator('.leader-table tr.me').innerText()).includes('3,530'));
+ await page.locator('button[data-view="badges"]').first().click();assert((await page.locator('.badge-grid').innerText()).includes('Challenge accepted'));await page.screenshot({path:path.join(shots,'quest-achievements.png'),fullPage:true});
+ await page.locator('#course-search').fill('zzzzzz');assert((await page.locator('#main').innerText()).includes('No courses found'));await page.getByRole('button',{name:'Clear search & filters',exact:true}).click();
+ await page.locator('#course-search').fill('Figma');assert(await page.locator('[data-course="figma"]').count()===1);await page.locator('[data-course="figma"]').click();await page.getByRole('button',{name:'Start learning',exact:true}).click();state=await page.evaluate(()=>JSON.parse(localStorage.getItem('quest-prototype-v1')));assert(state.progress.figma===0);
+ await page.getByRole('button',{name:'Learning preferences',exact:true}).click();await page.locator('#interest').selectOption('Development');await page.getByRole('button',{name:'Save preferences',exact:true}).click();await page.locator('button[data-view="dashboard"]').first().click();assert((await page.locator('.recommendations').innerText()).includes('responsive website'));
+ for(const width of [390,320]){await page.setViewportSize({width,height:844});for(const file of ['resume.html','learn.html']){await page.goto(url(file));if(file==='resume.html')await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('forma-prototype-v1'));s.step=0;localStorage.setItem('forma-prototype-v1',JSON.stringify(s));});await page.reload();assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),file+' horizontal overflow at '+width);if(width===390)await page.screenshot({path:path.join(shots,file.replace('.html','')+'-mobile.png'),fullPage:true});await page.getByRole('button',{name:'Toggle navigation',exact:true}).click();assert((await page.locator('.sidebar').getAttribute('class')).includes('open'));}}
+ await page.setViewportSize({width:1440,height:1000});await page.goto(url('index.html'));await page.screenshot({path:path.join(shots,'collection.png'),fullPage:true});
+ assert.deepStrictEqual(errors,[]);fs.writeFileSync(path.join(root,'browser-validation.json'),JSON.stringify({status:'PASS',tested:['profile editing','required field validation','template and accent switching','input-based suggestions','apply and undo','real PDF download','real DOCX download','saved state','incorrect and correct challenge feedback','no duplicate challenge XP','lesson progress and XP','rank updates','leaderboard periods','achievements','course search and empty state','course enrollment','personalized recommendations','390px and 320px responsive layouts','mobile navigation'],consoleErrors:errors},null,2));
+ await browser.close();console.log('PASS: complete resume and learning flows, exports, persistence, responsive checks.');
+})().catch(e=>{console.error(e);process.exit(1)});

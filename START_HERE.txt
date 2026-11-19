@@ -1,0 +1,31 @@
+FORMA + QUEST — INTERACTIVE UI PROTOTYPES
+
+1. Extract the ZIP completely.
+2. Open index.html in Chrome or Edge.
+3. Choose Forma (resume builder) or Quest (learning dashboard).
+4. Open handoff.html for the Figma import instructions and feature guide.
+
+No installation or server is required for the browser demos.
+Data is stored locally in your browser. Use each app's reset option to start over.
+AI suggestions are simulated. PDF and DOCX downloads are real.
+
+FIGMA
+In the Figma desktop app, open a Design file and import
+figma-plugin/manifest.json through Plugins > Development > Import plugin from manifest.
+Run "Forma + Quest — Editable UI Prototypes".
+The generator creates 20 editable screens, 3 component sets, and named prototype flows.
+It adds a new page and preserves existing content.
+
+The generator passed compilation and structural checks. It has not been run in
+native Figma here, and no Figma file has been created in your account.
+The browser supports actual typing, persistence, and exports. The Figma prototype
+uses connected example states. Mobile Figma entries link into desktop flows.
+
+DEVELOPMENT (optional)
+npm ci
+npm run figma:build
+npm run test:figma
+npm run test:browser
+The browser test expects Chrome at C:/Program Files/Google/Chrome/Application/chrome.exe.
+
+Local export dependencies and their notices are included under vendor/.

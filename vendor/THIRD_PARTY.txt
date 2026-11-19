@@ -1,0 +1,5 @@
+Browser export libraries: jsPDF 4.2.1 (MIT) and docx 9.16.0 (MIT).
+Original license notices for these libraries and installed dependency packages
+are preserved in licenses/. Additional development dependency notices may be
+included. The complete dependency versions are recorded in package-lock.json.
+The original library bundles retain their embedded copyright notices.

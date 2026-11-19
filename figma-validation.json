@@ -1,0 +1,100 @@
+{
+  "status": "PASS",
+  "scope": "API mock and approximate layout measurement; native Figma execution is still required.",
+  "screens": 20,
+  "componentSets": 3,
+  "prototypeConnectionsIncludingHover": 142,
+  "flowStarts": 4,
+  "approximateLayouts": [
+    {
+      "screen": "Forma / R1 / Profile setup",
+      "estimatedContentHeight": 1172,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Forma / R2 / Evergreen template",
+      "estimatedContentHeight": 1051,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Forma / R3 / Editorial template",
+      "estimatedContentHeight": 1051,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Forma / R4 / AI suggestions",
+      "estimatedContentHeight": 1059,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Forma / R5 / Suggestions applied",
+      "estimatedContentHeight": 1059,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Forma / R6 / Review and export",
+      "estimatedContentHeight": 1051,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Forma / R7 / Export success",
+      "estimatedContentHeight": 1051,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Forma / R8 / Studio template",
+      "estimatedContentHeight": 1051,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L1 / Dashboard",
+      "estimatedContentHeight": 1235,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L8 / Updated dashboard",
+      "estimatedContentHeight": 1235,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L2 / Course library",
+      "estimatedContentHeight": 949,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L3 / Lesson",
+      "estimatedContentHeight": 800,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L4 / Daily challenge",
+      "estimatedContentHeight": 781,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L9 / Challenge retry",
+      "estimatedContentHeight": 509,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L5 / Lesson reward",
+      "estimatedContentHeight": 761,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L10 / Challenge reward",
+      "estimatedContentHeight": 761,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L6 / Leaderboard",
+      "estimatedContentHeight": 788,
+      "frameHeight": 1440
+    },
+    {
+      "screen": "Quest / L7 / Achievements",
+      "estimatedContentHeight": 830,
+      "frameHeight": 1440
+    }
+  ]
+}

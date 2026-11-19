@@ -1,0 +1,23 @@
+{
+  "name": "forma-quest-prototypes",
+  "version": "1.0.0",
+  "description": "Interactive resume builder and gamified learning dashboard with an editable Figma generator",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:figma && npm run test:browser",
+    "test:browser": "node check-prototypes.cjs",
+    "test:figma": "node check-figma.cjs",
+    "figma:build": "tsc --project figma-plugin/tsconfig.json"
+  },
+  "keywords": [],
+  "author": "Fakiha Younas",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@figma/plugin-typings": "1.142.0",
+    "docx": "9.16.0",
+    "jspdf": "4.2.1",
+    "playwright": "1.65.1",
+    "typescript": "7.0.2"
+  }
+}
